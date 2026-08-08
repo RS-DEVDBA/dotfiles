@@ -1,70 +1,82 @@
 # dotfiles — rsdevdba
 
-Configuração pessoal de ambiente de desenvolvimento: Neovim + WezTerm.
+Personal development environment configuration: Neovim + WezTerm.
 
 ## Stack
 
-- **Editor:** Neovim 0.12.x com Lazy.nvim
+- **Editor:** Neovim 0.12.x with Lazy.nvim
 - **Terminal:** WezTerm
-- **Linguagens:** Go, Python, Rust, Bash, SQL (Oracle PL/SQL, T-SQL, ANSI), YAML, JSON, XML, TOML, PHP, Markdown, Lua
+- **Languages:** Go, Python, Rust, Bash, SQL (Oracle PL/SQL, T-SQL, ANSI), YAML, JSON, XML, TOML, PHP, Markdown, Lua
 
-## Pré-requisitos
+## Prerequisites
 
-### Todas as plataformas
-
-| Ferramenta | Instalação |
+| Tool | Purpose |
 |---|---|
-| Neovim >= 0.12 | Ver abaixo por plataforma |
-| Git | Sistema |
-| Node.js >= 18 (via nvm) | `curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.5/install.sh \| bash` |
-| Go | https://go.dev/dl |
-| uv (Python env manager) | `curl -LsSf https://astral.sh/uv/install.sh \| UV_INSTALL_DIR=/usr/local/bin sh` |
-| ripgrep | Ver abaixo por plataforma |
-| shellcheck | Ver abaixo por plataforma |
+| Neovim >= 0.12 | Editor |
+| Git | Required by Lazy.nvim to clone plugins |
+| Node.js >= 18 (via nvm) | Required by bash-language-server and other LSPs |
+| Go | Required for Go development and tools |
+| uv (Python env manager) | Required by chase.nvim |
+| ripgrep | Required by Telescope live grep |
+| shellcheck | Bash linter |
 
-### Oracle Linux / RHEL 8.x
+## Installation
+
+### 1. Clone the repository
 
 ```bash
-sudo dnf install -y gcc make git curl unzip tar
-curl -LO https://github.com/neovim/neovim/releases/download/v0.12.4/nvim-linux-x86_64.tar.gz
-tar xf nvim-linux-x86_64.tar.gz && sudo cp -r nvim-linux-x86_64/* /usr/local/ && rm -rf nvim-linux-x86_64*
-curl -LO https://github.com/BurntSushi/ripgrep/releases/download/15.1.0/ripgrep-15.1.0-x86_64-unknown-linux-musl.tar.gz
-tar xf ripgrep-15.1.0-x86_64-unknown-linux-musl.tar.gz && sudo cp ripgrep-15.1.0-x86_64-unknown-linux-musl/rg /usr/local/bin/ && rm -rf ripgrep-15.1.0-x86_64-unknown-linux-musl*
-curl -LO https://github.com/koalaman/shellcheck/releases/download/v0.11.0/shellcheck-v0.11.0.linux.x86_64.tar.xz
-tar xf shellcheck-v0.11.0.linux.x86_64.tar.xz && sudo cp shellcheck-v0.11.0/shellcheck /usr/local/bin/ && rm -rf shellcheck-v0.11.0*
-sudo dnf install -y https://rpms.remirepo.net/enterprise/remi-release-8.rpm
-sudo dnf module reset php -y && sudo dnf module enable php:remi-8.5 -y && sudo dnf install -y php-cli php-common
-curl -sS https://getcomposer.org/installer | php && sudo mv composer.phar /usr/local/bin/composer
+git clone https://github.com/RS-DEVDBA/dotfiles.git ~/dotfiles
+cd ~/dotfiles
+./install.sh
 ```
 
-### Oracle Linux / RHEL 9.x
+### 2. Install Node.js via nvm
 
 ```bash
-sudo dnf install -y gcc make git curl unzip tar
-curl -LO https://github.com/neovim/neovim/releases/download/v0.12.4/nvim-linux-x86_64.tar.gz
-tar xf nvim-linux-x86_64.tar.gz && sudo cp -r nvim-linux-x86_64/* /usr/local/ && rm -rf nvim-linux-x86_64*
-curl -LO https://github.com/BurntSushi/ripgrep/releases/download/15.1.0/ripgrep-15.1.0-x86_64-unknown-linux-musl.tar.gz
-tar xf ripgrep-15.1.0-x86_64-unknown-linux-musl.tar.gz && sudo cp ripgrep-15.1.0-x86_64-unknown-linux-musl/rg /usr/local/bin/ && rm -rf ripgrep-15.1.0-x86_64-unknown-linux-musl*
-curl -LO https://github.com/koalaman/shellcheck/releases/download/v0.11.0/shellcheck-v0.11.0.linux.x86_64.tar.xz
-tar xf shellcheck-v0.11.0.linux.x86_64.tar.xz && sudo cp shellcheck-v0.11.0/shellcheck /usr/local/bin/ && rm -rf shellcheck-v0.11.0*
-sudo dnf install -y https://rpms.remirepo.net/enterprise/remi-release-9.rpm
-sudo dnf module reset php -y && sudo dnf module enable php:remi-8.5 -y && sudo dnf install -y php-cli php-common
-curl -sS https://getcomposer.org/installer | php && sudo mv composer.phar /usr/local/bin/composer
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.5/install.sh | bash
+source ~/.bashrc  # or ~/.zshrc
+nvm install 24
+nvm use 24
+nvm alias default 24
 ```
 
-### Oracle Linux / RHEL 10.x
+### 3. Install uv
 
 ```bash
-sudo dnf install -y gcc make git curl unzip tar
-curl -LO https://github.com/neovim/neovim/releases/download/v0.12.4/nvim-linux-x86_64.tar.gz
-tar xf nvim-linux-x86_64.tar.gz && sudo cp -r nvim-linux-x86_64/* /usr/local/ && rm -rf nvim-linux-x86_64*
-curl -LO https://github.com/BurntSushi/ripgrep/releases/download/15.1.0/ripgrep-15.1.0-x86_64-unknown-linux-musl.tar.gz
-tar xf ripgrep-15.1.0-x86_64-unknown-linux-musl.tar.gz && sudo cp ripgrep-15.1.0-x86_64-unknown-linux-musl/rg /usr/local/bin/ && rm -rf ripgrep-15.1.0-x86_64-unknown-linux-musl*
-curl -LO https://github.com/koalaman/shellcheck/releases/download/v0.11.0/shellcheck-v0.11.0.linux.x86_64.tar.xz
-tar xf shellcheck-v0.11.0.linux.x86_64.tar.xz && sudo cp shellcheck-v0.11.0/shellcheck /usr/local/bin/ && rm -rf shellcheck-v0.11.0*
-sudo dnf install -y https://rpms.remirepo.net/enterprise/remi-release-10.rpm
-sudo dnf module reset php -y && sudo dnf module enable php:remi-8.5 -y && sudo dnf install -y php-cli php-common
-curl -sS https://getcomposer.org/installer | php && sudo mv composer.phar /usr/local/bin/composer
+curl -LsSf https://astral.sh/uv/install.sh | UV_INSTALL_DIR=/usr/local/bin sh
+```
+
+### 4. Install Neovim plugins
+
+Open Neovim and run:
+
+```
+:Lazy sync
+```
+
+### 5. Install LSPs via Mason
+
+Inside Neovim:
+
+```
+:MasonUpdate
+```
+
+## External Tools (not managed by Mason)
+
+| Tool | Install |
+|---|---|
+| `pylsp` | `sudo apt install python3-pylsp` (Ubuntu) or `sudo dnf install python3-pylsp` (RHEL/OL) |
+| `ruff` | `curl -LsSf https://astral.sh/ruff/install.sh \| sh` |
+| `shfmt` | `go install mvdan.cc/sh/v3/cmd/shfmt@latest` |
+| `sqlfluff` | `pip3 install sqlfluff` |
+
+## Platform-specific Installation
+
+### macOS Tahoe
+
+```bash
+brew install neovim ripgrep shellcheck php composer
 ```
 
 ### Ubuntu 24.04 / 26.04
@@ -78,48 +90,15 @@ sudo apt install -y python3-pylsp
 pip3 install sqlfluff
 ```
 
-### macOS Tahoe
+### WSL (Ubuntu 24.04)
 
-```bash
-brew install neovim ripgrep shellcheck php composer
-```
+Same as Ubuntu 24.04 above. Neovim runs natively inside WSL without additional configuration.
 
-## Instalação
-
-```bash
-git clone https://github.com/RS-DEVDBA/dotfiles.git ~/dotfiles
-cd ~/dotfiles
-./install.sh
-```
-
-Abra o Neovim e rode:
-
-```
-:Lazy sync
-```
-
-## LSPs via Mason
-
-Dentro do Neovim após instalar os plugins:
-
-```
-:MasonUpdate
-```
-
-## Plugins Externos (não gerenciados pelo Mason)
-
-| Ferramenta | Instalação |
-|---|---|
-| `pylsp` | `sudo apt install python3-pylsp` (Ubuntu) ou `sudo dnf install python3-pylsp` (RHEL/OL) |
-| `ruff` | `curl -LsSf https://astral.sh/ruff/install.sh \| sh` |
-| `shfmt` | `go install mvdan.cc/sh/v3/cmd/shfmt@latest` |
-| `sqlfluff` | `pip3 install sqlfluff` |
-
-## Estrutura
+## Structure
 
 ```
 dotfiles/
-├── nvim/                    ← config do Neovim (~/.config/nvim)
+├── nvim/                    ← Neovim config (~/.config/nvim)
 │   ├── init.lua
 │   └── lua/rsdevdba/
 │       ├── init.lua
@@ -129,25 +108,108 @@ dotfiles/
 │       ├── autocmds.lua
 │       └── plugins/
 ├── wezterm/
-│   └── .wezterm.lua         ← config do WezTerm (~/.wezterm.lua)
-├── install.sh               ← script de instalação via symlinks
+│   └── .wezterm.lua         ← WezTerm config (~/.wezterm.lua)
+├── install.sh               ← Installation script (symlinks)
 └── README.md
 ```
 
 ## Keymaps
 
-A tecla líder é o **espaço**.
+Leader key is **space**.
 
-| Teclas | Ação |
+### Files and Navigation
+
+| Keys | Action |
 |---|---|
-| `espaço e` | Abrir/fechar Neo-tree |
-| `espaço w` | Salvar arquivo |
-| `espaço x` | Executar arquivo (Go, Lua) |
-| `g d` | Ir para definição |
-| `K` | Documentação hover |
-| `espaço v r n` | Renomear símbolo |
-| `espaço v d o` | Abrir diagnóstico na linha |
-| `] d` | Próximo diagnóstico |
-| `[ d` | Diagnóstico anterior |
-| `espaço y` | Copiar para clipboard do sistema |
-| `espaço p` | Colar do clipboard do sistema |
+| `space e` | Toggle Neo-tree |
+| `space E` | Reveal current file in Neo-tree |
+| `space w` | Save file |
+| `space b d` | Close current buffer |
+| `space x` | Run current file (Go, Lua) |
+
+### Window Navigation
+
+| Keys | Action |
+|---|---|
+| `Ctrl+w h` | Move to left window |
+| `Ctrl+w l` | Move to right window |
+| `Ctrl+w j` | Move to window below |
+| `Ctrl+w k` | Move to window above |
+| `Ctrl+w q` | Close current window |
+
+### LSP
+
+| Keys | Action |
+|---|---|
+| `g d` | Go to definition |
+| `g i` | Go to implementation |
+| `K` | Hover documentation |
+| `space v r n` | Rename symbol |
+| `space v c a` | Code action |
+| `space v r f` | Find references |
+| `space v w s` | Workspace symbols |
+
+### Diagnostics
+
+| Keys | Action |
+|---|---|
+| `space v d o` | Open diagnostic float |
+| `] d` | Next diagnostic |
+| `[ d` | Previous diagnostic |
+| `space v d h` | Hide diagnostics |
+| `space v d s` | Show diagnostics |
+
+### Clipboard and Editing
+
+| Keys | Action |
+|---|---|
+| `space y` | Yank to system clipboard |
+| `space Y` | Yank line to system clipboard |
+| `space p` | Paste from system clipboard |
+| `space d` | Delete without yanking |
+| `space i e` | Insert error handling block (Go/Python) |
+
+### Status Bar Icons
+
+| Icon | Meaning |
+|---|---|
+| `△ N` | N warnings |
+| `ⓘ N` | N hints |
+| `Q N` | N suggestions |
+| `✗ N` | N errors |
+
+## SQL — Dialect Configuration
+
+Create a `.sqlfluff` file at the root of each SQL project:
+
+```ini
+# Oracle PL/SQL
+[sqlfluff]
+dialect = oracle
+```
+
+```ini
+# SQL Server T-SQL
+[sqlfluff]
+dialect = tsql
+```
+
+```ini
+# ANSI SQL
+[sqlfluff]
+dialect = ansi
+```
+
+## Known Limitations
+
+### Treesitter + Bash/Markdown + Heredoc/Fenced Code Blocks
+
+The `nvim-treesitter` plugin (archived April 2026) has a bug with Neovim 0.12 that causes an error when parsing heredocs in `.sh` files and fenced code blocks in `.md` files. Workaround applied: Treesitter disabled for `bash` and `markdown`, with regex highlighting as fallback. Full colorization is maintained.
+
+### luarocks
+
+Mason displays warnings about `luarocks` not being available. This is expected and does not affect any LSP in the configured stack. Support disabled in `lazy.lua` with `rocks = { enabled = false }`.
+
+### bash-language-server + Node.js
+
+Requires Node.js >= 18. Node.js 16 or lower causes LSP startup failure. Install Node.js 24 via nvm as documented above.
