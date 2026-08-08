@@ -70,7 +70,7 @@ Inside Neovim:
 
 | Tool | Purpose | Install |
 |---|---|---|
-| `pylsp` | Python LSP | `sudo apt install python3-pylsp` (Ubuntu) or `sudo dnf install python3-pylsp` (RHEL/OL) |
+| `pylsp` | Python LSP | `sudo apt install python3-pylsp` (Ubuntu) or `sudo dnf install python3-pylsp` (RHEL/OL) or `brew install pylsp` (MacOS) |
 | `ruff` | Python linter/formatter | `curl -LsSf https://astral.sh/ruff/install.sh \| sh` |
 | `shfmt` | Bash formatter | `go install mvdan.cc/sh/v3/cmd/shfmt@latest` |
 | `sqlfluff` | SQL linter | `pip3 install sqlfluff` |
