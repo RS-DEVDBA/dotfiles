@@ -1,0 +1,8 @@
+# Lazy lock (gerado automaticamente, cada maquina tem o seu)
+nvim/lazy-lock.json
+
+# Arquivos de log
+*.log
+
+# Cache e estado local
+.DS_Store
