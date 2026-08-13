@@ -2,15 +2,14 @@ return {
     {
         "nvim-lualine/lualine.nvim",
         config = function()
-            -- local theme = require("lualine.themes.onedark")
-            local theme = require("lualine.themes.iceberg_dark")
-            -- local theme = require("lualine.themes.auto")
+            local theme = require("lualine.themes.onedark")
+
             require("lualine").setup {
                 options = {
                     icons_enabled = true,
                     theme = theme,
                     component_separators = { left = "\\", right = "\\" },
-                    section_separators = { left = "", right = "" },
+                    section_separators = { left = "", right = "" },
                     disabled_filetypes = {
                         statusline = {},
                         winbar = {},
@@ -26,14 +25,7 @@ return {
                 },
                 sections = {
                     lualine_a = { "mode" },
-                    lualine_b = {
-                        {
-                            "filetype",
-                            colored = false,   -- cor nativa do ícone por linguagem
-                            icon_only = false, -- mostra ícone + nome
-                        },
-                        "branch", "diff", "diagnostics"
-                    },
+                    lualine_b = { "filetype", "branch", "diff", "diagnostics" },
                     lualine_c = { { "filename", path = 3 } },
                     lualine_x = { "copilot", "encoding", "fileformat" },
                     lualine_y = { "progress" },
