@@ -56,15 +56,13 @@ config.cursor_blink_ease_out = 'EaseOut'
 
 config.force_reverse_video_cursor = false
 
-config.font = wezterm.font('JetBrains Mono')
-config.font_size = 19.0
+config.font = wezterm.font('JetBrains Mono', { weight = 'Light' })
+config.font_size = 16.0
 config.line_height = 0.90
 
 -- Tab bar
 config.enable_tab_bar = true
 config.use_fancy_tab_bar = true
-config.integrated_title_button_alignment = "Left"
-config.integrated_title_buttons = { "Close", "Hide", "Maximize" }
 config.hide_tab_bar_if_only_one_tab = false
 config.tab_max_width = 999
 
@@ -73,9 +71,10 @@ wezterm.on('format-tab-title', function(tab)
     return ' ' .. title .. ' '
 end)
 
--- Decoracoes da janela (macOS usa TITLE|RESIZE para botoes semaforo nativos)
--- config.window_decorations = "TITLE|RESIZE"
+-- Decoracoes da janela
 config.window_decorations = "INTEGRATED_BUTTONS|RESIZE"
+config.integrated_title_button_alignment = "Right"
+config.integrated_title_buttons = { "Hide", "Maximize", "Close" }
 
 -- Bordas
 config.window_frame = {
@@ -87,6 +86,7 @@ config.window_frame = {
     border_right_color   = '#505050',
     border_bottom_color  = '#505050',
     border_top_color     = '#505050',
+    font_size            = 14.0, -- Tamanho da fonte da tab bar
 }
 
 -- Padding interno
@@ -100,64 +100,61 @@ config.window_padding = {
 -- Scrollbar
 config.enable_scroll_bar = false
 
--- Opacidade com blur nativo do macOS
 config.window_background_opacity = 0.95
-config.macos_window_background_blur = 20
-
 config.scrollback_lines = 7000
 
 config.keys = {
     -- TABS
-    { key = 't',        mods = 'CMD',       action = wezterm.action.SpawnTab 'CurrentPaneDomain' },
-    { key = 'w',        mods = 'CMD',       action = wezterm.action.CloseCurrentTab { confirm = true } },
-    { key = 'PageDown', mods = 'CTRL',      action = wezterm.action.ActivateTabRelative(1) },
-    { key = 'PageUp',   mods = 'CTRL',      action = wezterm.action.ActivateTabRelative(-1) },
+    { key = 't',        mods = 'CTRL|SHIFT', action = wezterm.action.SpawnTab 'CurrentPaneDomain' },
+    { key = 'w',        mods = 'CTRL|SHIFT', action = wezterm.action.CloseCurrentTab { confirm = true } },
+    { key = 'PageDown', mods = 'CTRL',       action = wezterm.action.ActivateTabRelative(1) },
+    { key = 'PageUp',   mods = 'CTRL',       action = wezterm.action.ActivateTabRelative(-1) },
 
     -- Alt+numero para tabs
-    { key = '1',        mods = 'ALT',       action = wezterm.action.ActivateTab(0) },
-    { key = '2',        mods = 'ALT',       action = wezterm.action.ActivateTab(1) },
-    { key = '3',        mods = 'ALT',       action = wezterm.action.ActivateTab(2) },
-    { key = '4',        mods = 'ALT',       action = wezterm.action.ActivateTab(3) },
-    { key = '5',        mods = 'ALT',       action = wezterm.action.ActivateTab(4) },
-    { key = '6',        mods = 'ALT',       action = wezterm.action.ActivateTab(5) },
-    { key = '7',        mods = 'ALT',       action = wezterm.action.ActivateTab(6) },
-    { key = '8',        mods = 'ALT',       action = wezterm.action.ActivateTab(7) },
-    { key = '9',        mods = 'ALT',       action = wezterm.action.ActivateTab(8) },
-    { key = '0',        mods = 'ALT',       action = wezterm.action.ActivateTab(9) },
+    { key = '1',        mods = 'ALT',        action = wezterm.action.ActivateTab(0) },
+    { key = '2',        mods = 'ALT',        action = wezterm.action.ActivateTab(1) },
+    { key = '3',        mods = 'ALT',        action = wezterm.action.ActivateTab(2) },
+    { key = '4',        mods = 'ALT',        action = wezterm.action.ActivateTab(3) },
+    { key = '5',        mods = 'ALT',        action = wezterm.action.ActivateTab(4) },
+    { key = '6',        mods = 'ALT',        action = wezterm.action.ActivateTab(5) },
+    { key = '7',        mods = 'ALT',        action = wezterm.action.ActivateTab(6) },
+    { key = '8',        mods = 'ALT',        action = wezterm.action.ActivateTab(7) },
+    { key = '9',        mods = 'ALT',        action = wezterm.action.ActivateTab(8) },
+    { key = '0',        mods = 'ALT',        action = wezterm.action.ActivateTab(9) },
 
-    -- COPIAR/COLAR (CMD no macOS)
-    { key = 'c',        mods = 'CMD',       action = wezterm.action.CopyTo 'Clipboard' },
-    { key = 'v',        mods = 'CMD',       action = wezterm.action.PasteFrom 'Clipboard' },
+    -- COPIAR/COLAR
+    { key = 'c',        mods = 'CTRL|SHIFT', action = wezterm.action.CopyTo 'Clipboard' },
+    { key = 'v',        mods = 'CTRL|SHIFT', action = wezterm.action.PasteFrom 'Clipboard' },
 
     -- BUSCA
-    { key = 'f',        mods = 'CMD',       action = wezterm.action.Search 'CurrentSelectionOrEmptyString' },
+    { key = 'f',        mods = 'CTRL|SHIFT', action = wezterm.action.Search 'CurrentSelectionOrEmptyString' },
 
     -- ZOOM
-    { key = '+',        mods = 'CMD',       action = wezterm.action.IncreaseFontSize },
-    { key = '-',        mods = 'CMD',       action = wezterm.action.DecreaseFontSize },
-    { key = '0',        mods = 'CMD',       action = wezterm.action.ResetFontSize },
+    { key = '+',        mods = 'CTRL',       action = wezterm.action.IncreaseFontSize },
+    { key = '-',        mods = 'CTRL',       action = wezterm.action.DecreaseFontSize },
+    { key = '0',        mods = 'CTRL',       action = wezterm.action.ResetFontSize },
 
     -- FULLSCREEN
-    { key = 'F11',      mods = 'NONE',      action = wezterm.action.ToggleFullScreen },
+    { key = 'F11',      mods = 'NONE',       action = wezterm.action.ToggleFullScreen },
 
     -- NOVA JANELA
-    { key = 'n',        mods = 'CMD',       action = wezterm.action.SpawnWindow },
+    { key = 'n',        mods = 'CTRL|SHIFT', action = wezterm.action.SpawnWindow },
 
     -- SPLITS
-    { key = 'd',        mods = 'CMD',       action = wezterm.action.SplitHorizontal { domain = 'CurrentPaneDomain' } },
-    { key = 'e',        mods = 'CMD|SHIFT', action = wezterm.action.SplitVertical { domain = 'CurrentPaneDomain' } },
+    { key = 'd',        mods = 'CTRL|SHIFT', action = wezterm.action.SplitHorizontal { domain = 'CurrentPaneDomain' } },
+    { key = 'e',        mods = 'CTRL|SHIFT', action = wezterm.action.SplitVertical { domain = 'CurrentPaneDomain' } },
 
     -- Navegar splits
-    { key = 'h',        mods = 'CTRL|ALT',  action = wezterm.action.ActivatePaneDirection 'Left' },
-    { key = 'l',        mods = 'CTRL|ALT',  action = wezterm.action.ActivatePaneDirection 'Right' },
-    { key = 'k',        mods = 'CTRL|ALT',  action = wezterm.action.ActivatePaneDirection 'Up' },
-    { key = 'j',        mods = 'CTRL|ALT',  action = wezterm.action.ActivatePaneDirection 'Down' },
+    { key = 'h',        mods = 'CTRL|ALT',   action = wezterm.action.ActivatePaneDirection 'Left' },
+    { key = 'l',        mods = 'CTRL|ALT',   action = wezterm.action.ActivatePaneDirection 'Right' },
+    { key = 'k',        mods = 'CTRL|ALT',   action = wezterm.action.ActivatePaneDirection 'Up' },
+    { key = 'j',        mods = 'CTRL|ALT',   action = wezterm.action.ActivatePaneDirection 'Down' },
 
     -- Fechar split
-    { key = 'x',        mods = 'CMD|SHIFT', action = wezterm.action.CloseCurrentPane { confirm = true } },
+    { key = 'x',        mods = 'CTRL|SHIFT', action = wezterm.action.CloseCurrentPane { confirm = true } },
 
     -- Reload config
-    { key = 'r',        mods = 'CMD|SHIFT', action = wezterm.action.ReloadConfiguration },
+    { key = 'r',        mods = 'CTRL|SHIFT', action = wezterm.action.ReloadConfiguration },
 }
 
 config.mouse_bindings = {
@@ -178,6 +175,12 @@ config.mouse_bindings = {
         event = { Down = { streak = 1, button = 'Middle' } },
         mods = 'NONE',
         action = wezterm.action.PasteFrom 'Clipboard',
+    },
+    -- Super+arrastar para mover janela no Wayland/GNOME
+    {
+        event = { Drag = { streak = 1, button = 'Left' } },
+        mods = 'SUPER',
+        action = wezterm.action.StartWindowDrag,
     },
 }
 
