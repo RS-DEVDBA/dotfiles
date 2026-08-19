@@ -26,7 +26,7 @@ return {
                     -- Lua (config do próprio nvim)
                     "lua_ls",
                     -- Gramática / prosa
-                    "ltex",
+                    -- "ltex",
                     -- Protobuf
                     "buf_ls",
                     -- TypeScript/JS
@@ -212,9 +212,11 @@ return {
                                 ltex = {
                                     language = "pt-BR",
                                     enabled = {
-                                        "bibtex", "gitcommit", "markdown", "org", "tex",
-                                        "restructuredtext", "rsweave", "latex", "quarto",
-                                        "rmd", "context", "mail", "plaintext",
+                                        "latex", "tex",
+                                    },
+                                    disabledRules = {
+                                        ["pt-BR"] = { "HUNSPELL_RULE", "MORFOLOGIK_RULE_PT_BR", "PT_AGREEMENT_REPLACE" },
+                                        ["en-US"] = { "HUNSPELL_RULE" },
                                     },
                                 },
                             },
